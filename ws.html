@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <style type="text/css">
+        #showMessage{
+            height: 270px;
+            width: 600px;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            border:1px solid #ccc;
+        }
+        #msg{
+            margin-top: 10px;
+            width:550px;
+        }
+    </style>
+</head>
+<body>
+<div id="showMessage"></div>
+<input type="text" id="msg" name="msg">
+<button id="send">发送</button>
+<script src="http://cdn.bootcss.com/jquery/1.11.2/jquery.min.js"></script>
+<script type="text/javascript" >
+    $('#send').click(function(){
+        var msg = $('#msg').val();
+        console.log(msg)
+        websocket.send(msg);
+    });
+    var wsServer = 'ws://127.0.0.1:9502';
+    var websocket = new WebSocket(wsServer);
+    websocket.onopen = function (evt) {
+        console.log("Connected to WebSocket server.");
+    };
+
+    websocket.onclose = function (evt) {
+        console.log("Disconnected");
+    };
+
+    websocket.onmessage = function (evt) {
+        console.log('Retrieved data from server: ' + evt.data);
+        $('#showMessage').append('<p>'+evt.data+'</p>');
+        $('#showMessage').scrollTop(100000000);
+    };
+
+    websocket.onerror = function (evt, e) {
+        console.log('Error occured: ' + evt.data);
+    };
+</script>
+</body>
+</html>
